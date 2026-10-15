@@ -352,16 +352,79 @@ button:focus-visible {
   flex-wrap: wrap;
   gap: 8px;
 }
-.load-select {
-  width: auto;
-  height: 30px;
-  min-width: 180px;
-  max-width: 260px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.saved-menu {
+  position: relative;
 }
-.load-select:disabled {
+.saved-trigger:disabled {
   opacity: 0.6;
+  cursor: default;
+}
+.saved-trigger .chevron {
+  font-size: 0.75rem;
+}
+.saved-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  width: 280px;
+  max-width: calc(100vw - 32px);
+  max-height: 320px;
+  overflow: auto;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+}
+.saved-popover ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.saved-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.saved-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.saved-item:hover {
+  background: var(--surface-2);
+}
+.saved-item.all {
+  width: 100%;
+  font-weight: 600;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 2px;
+}
+.saved-name {
+  font-weight: 500;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.saved-profile {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.remove-saved:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 .client {
@@ -430,7 +493,7 @@ input[type='range'] {
   appearance: none;
   border-radius: 999px;
   background: linear-gradient(to right, var(--accent) var(--pct), var(--surface-2) var(--pct));
-  cursor: pointer;
+  cursor: grab;
 }
 input[type='range']::-webkit-slider-thumb {
   appearance: none;
@@ -713,10 +776,17 @@ input[type='range']::-moz-range-thumb {
 .torch-cursor button,
 .torch-cursor a,
 .torch-cursor select,
-.torch-cursor label,
+.torch-cursor label {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='rotate(-45 16 16)' stroke='%23e5e7eb' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M10 4h12l-3 8h-6z' fill='%236b7280'/%3E%3Crect x='13' y='12' width='6' height='16' rx='1.5' fill='%23374151'/%3E%3Crect x='14.5' y='15' width='3' height='3' rx='0.8' fill='%23fbbf24' stroke='none'/%3E%3Cpath d='M10.5 4h11' stroke='%23fde68a' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") 5 5, auto;
+}
+
 .torch-cursor input[type='range'],
 .torch-cursor .drag-handle {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='rotate(-45 16 16)' stroke='%23e5e7eb' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M10 4h12l-3 8h-6z' fill='%236b7280'/%3E%3Crect x='13' y='12' width='6' height='16' rx='1.5' fill='%23374151'/%3E%3Crect x='14.5' y='15' width='3' height='3' rx='0.8' fill='%23fbbf24' stroke='none'/%3E%3Cpath d='M10.5 4h11' stroke='%23fde68a' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") 5 5, auto;
+  cursor: grab;
+}
+.torch-cursor input[type='range']:active,
+.torch-cursor .drag-handle:active {
+  cursor: grabbing;
 }
 
 /* ---------- Toast ---------- */
