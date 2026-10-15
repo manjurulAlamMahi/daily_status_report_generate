@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import ReportHeader from './components/ReportHeader.jsx';
 import ClientBlock from './components/ClientBlock.jsx';
 import Preview from './components/Preview.jsx';
+import SavedClientsMenu from './components/SavedClientsMenu.jsx';
 import Torch from './components/Torch.jsx';
 import { ACTIONS, CUSTOM_ACTION, findIssues, formatReport, isClientEmpty } from './utils/formatReport.js';
 import { KEYS, load, remove, save } from './utils/storage.js';
@@ -117,12 +118,19 @@ export default function App() {
   };
 
   const loadSaved = (value) => {
-    if (value === '') return;
     const picked = value === 'all' ? savedClients : [savedClients[Number(value)]];
     const added = picked.map((details) => newClient(details));
     // Replace the untouched starter block instead of leaving it dangling.
     setClients((cs) => [...cs.filter((c) => !isClientEmpty(c)), ...added]);
     notify(`Loaded ${added.length} client${added.length === 1 ? '' : 's'}`);
+  };
+
+  const removeSaved = (index) => {
+    const removed = savedClients[index];
+    const next = savedClients.filter((_, i) => i !== index);
+    setSavedClients(next);
+    save(KEYS.templates, next);
+    notify(`Removed ${removed?.name || 'client'} from saved clients`);
   };
 
   const fallbackCopy = () => {
@@ -205,21 +213,7 @@ export default function App() {
             <div className="section-bar">
               <h2>Clients</h2>
               <div className="section-actions">
-                <select
-                  className="load-select"
-                  value=""
-                  onChange={(e) => loadSaved(e.target.value)}
-                  disabled={!savedClients.length}
-                  aria-label="Load saved clients"
-                >
-                  <option value="">{savedClients.length ? 'Load Saved Clients…' : 'No saved clients'}</option>
-                  {savedClients.length > 1 && <option value="all">All saved clients ({savedClients.length})</option>}
-                  {savedClients.map((c, i) => (
-                    <option key={i} value={i}>
-                      {[c.name, c.profile].filter(Boolean).join(' · ')}
-                    </option>
-                  ))}
-                </select>
+                <SavedClientsMenu saved={savedClients} onLoad={loadSaved} onRemove={removeSaved} />
                 <button type="button" className="btn ghost small" onClick={saveTemplate}>
                   Save Clients as Template
                 </button>
